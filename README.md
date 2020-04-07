@@ -3,7 +3,7 @@ Leikurinn er mjög einfaldur ég var ekkert að reyna gera mikinn "leik" úr þe
 
 Vídíóið
 
-I I I I I I I I
+ I I I I I I I I
 
 VVVVVVVV
 
