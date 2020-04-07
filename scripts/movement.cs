@@ -1,12 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class movement : MonoBehaviour
 {
     public CharacterController2D controller;
+    public Animator animator;
 
     private float timer = 2f;
+    public Text countText;
+    private int count = 0;
+    public Collider2D onCollision;
 
     public GameObject rb;
 
@@ -22,27 +27,60 @@ public class movement : MonoBehaviour
     void Update()
     {
         moveh = Input.GetAxisRaw("Horizontal") * runSpeed;
+        animator.SetFloat("speed", Mathf.Abs(moveh));
+        
+
         timer += Time.deltaTime;
         if (timer >= 2f)
         { 
             if(Input.GetButtonDown("Jump"))
             {
                 jump = true;
-                Debug.Log("bbnopp");
+                animator.SetBool("IsJump", true);
             }
         }
-        /*else if (Input.GetButtonDown("Crouch"))
+        if (Input.GetButtonDown("Crouch"))
         {
             crouch = true;
-        }*/
-        if(rb.transform.position.y < -1.4f)
+            animator.SetBool("IsCrouch", true);
+        }
+        else if (Input.GetButtonUp("Crouch"))
+        {
+            crouch = false;
+            animator.SetBool("IsCrouch", false);
+        }
+        if (rb.transform.position.y < -1.4f)
         {
             FindObjectOfType<GameManager>().EndGame();
         }
     }
+    public void OnTriggerEnter2D()
+    {
+        if (onCollision.gameObject.CompareTag("Pick Up"))
+        {
+            onCollision.gameObject.SetActive(false);
+            count = count + 1;
+            SetCountText();
+        }
+    }
+
+
+    void SetCountText()
+    {
+        countText.text = "" + count.ToString();
+    }
+
+        public void OnLand()
+    {
+  
+            animator.SetBool("IsJump", false);
+
+    }
+
     void FixedUpdate()
     {
-        controller.Move(moveh * Time.fixedDeltaTime, false, jump);
+        controller.Move(moveh * Time.fixedDeltaTime, crouch, jump);
         jump = false;
+
     }
 }
